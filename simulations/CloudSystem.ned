@@ -11,21 +11,30 @@ network CloudSystem
     parameters:
         int N = default(5);        		// Numero di macchine virtuali
         double R = default(1000);       // Tasso totale di elaborazione (instructions/sec)
-        double T @unit(s);						// Tempo generazione task
+        double T @unit("s");						// Tempo generazione task
+		int T_type;
         double I;						// Lunghezza task
+        int I_type;
         double S;						// Backend
+        int S_type;
         double p = default(0.5);        // Probabilità di inoltro al backend
     submodules:
         taskGenerator: TaskGenerator {
-            timeDistribution = parent.T;
-            taskSize = parent.I;
+            timeDistributionMean = parent.T;
+            timeDistributionType = parent.T_type;
+            timeRandomStream = 0;
             
+            instrDistributionMean = parent.I;
+            instrDistributionType = parent.I_type;
+            instrRandomStream = 1;
+             
             @display("p=39,106");
         }
         cloudNode: CloudNode {
             numVMs = parent.N;
             processingRate = parent.R;
             backendProcessingProbability = parent.p;
+            pRandomStream = 2;
             
             @display("p=140,106");
         }

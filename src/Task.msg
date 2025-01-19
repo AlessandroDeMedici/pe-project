@@ -1,0 +1,4 @@
+message Task 
+{
+    double taskLength;
+}

@@ -1,41 +1,32 @@
 #include "CloudNode.h"
+#include "Task_m.h"
 
 namespace cloudcomputingworkloads {
 
-Define_Module(Queue);
-Define_Module(VM);
-Define_Module(Mux);
+Define_Module(CloudNode);
 
-void Queue::initialize()
+void CloudNode::initialize()
 {
+  pRandomStream = par("pRandomStream");
+  p = par("backendProcessingProbability");
 }
 
-void Queue::handleMessage(cMessage *msg)
+void CloudNode::handleMessage(cMessage *msg)
 {
+    EV << "Received message " << msg->getName() << " from " << msg->getArrivalGate()->getName() << "length: " << check_and_cast<Task *>(msg)->getTaskLength() << endl;
+
     // just send back the message we received
-    send(msg, "out");
+    taskFinished(check_and_cast<Task *>(msg));
 }
 
-void VM::initialize()
+
+void CloudNode::taskFinished(Task *task)
 {
-
+    double random_val = uniform(0, 1, pRandomStream);
+    if (random_val < p) {
+        send(task, "backend");
+    } else {
+        send(task, "sink");
+    }
 }
-
-void VM::handleMessage(cMessage *msg)
-{
-    // just send back the message we received
-    send(msg, "out");
-}
-
-void Mux::initialize()
-{
-
-}
-
-void Mux::handleMessage(cMessage *msg)
-{
-    // just send back the message we received
-    send(msg, "out");
-}
-
 }; // namespace

@@ -27,9 +27,20 @@ namespace cloudcomputingworkloads {
  */
 class TaskGenerator : public cSimpleModule
 {
+  int timeDistributionType;
+  double timeDistributionMean;
+  int timeRandomStream;
+
+  int instrDistributionType;
+  double instrDistributionMean;
+  int instrRandomStream;
+
+  cMessage *timer_;
+
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void scheduleNext(cMessage *timer);
 };
 
 class Sink : public cSimpleModule

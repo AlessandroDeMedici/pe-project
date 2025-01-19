@@ -13,12 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __MYFIRSTPROJECT_CLOUDNODE_H
-#define __MYFIRSTPROJECT_CLOUDNODE_H
+#ifndef __CLOUDCOMPUTINGWORKLOADS_TCX_H
+#define __CLOUDCOMPUTINGWORKLOADS_TCX_H
 
 #include <omnetpp.h>
-#include "Task_m.h"
-#include <queue>
 
 using namespace omnetpp;
 
@@ -27,17 +25,11 @@ namespace cloudcomputingworkloads {
 /**
  * Implements the Txc simple module. See the NED file for more information.
  */
-class CloudNode : public cSimpleModule
+class Txc : public cSimpleModule
 {
-  private:
-    double p;
-    int pRandomStream;
-    std::queue<Task *> *fifoQueue;
-
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
-    virtual void taskFinished(Task *task);
 };
 
 }; // namespace

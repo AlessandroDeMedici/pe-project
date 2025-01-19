@@ -3,8 +3,13 @@ package cloudcomputingworkloads;
 simple TaskGenerator
 {
     parameters:
-        double timeDistribution @unit(s);
-        double taskSize;
+        int timeDistributionType;
+        double timeDistributionMean @unit(s);
+        int timeRandomStream;
+        
+        int instrDistributionType;
+        double instrDistributionMean;
+        int instrRandomStream;
     gates:
         output out;
 }

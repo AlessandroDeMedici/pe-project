@@ -13,33 +13,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __MYFIRSTPROJECT_CLOUDNODE_H
-#define __MYFIRSTPROJECT_CLOUDNODE_H
+package cloudcomputingworkloads;
 
-#include <omnetpp.h>
-#include "Task_m.h"
-#include <queue>
-
-using namespace omnetpp;
-
-namespace cloudcomputingworkloads {
-
-/**
- * Implements the Txc simple module. See the NED file for more information.
- */
-class CloudNode : public cSimpleModule
+//
+// Immediately sends out any message it receives. It can optionally generate
+// a message at the beginning of the simulation, to bootstrap the process.
+//
+simple Txc
 {
-  private:
-    double p;
-    int pRandomStream;
-    std::queue<Task *> *fifoQueue;
-
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void taskFinished(Task *task);
-};
-
-}; // namespace
-
-#endif
+    parameters:
+        bool sendInitialMessage = default(false);
+    gates:
+        input in;
+        output out;
+}
