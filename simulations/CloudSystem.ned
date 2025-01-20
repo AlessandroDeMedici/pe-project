@@ -18,6 +18,7 @@ network CloudSystem
         double S;						// Backend
         int S_type;
         double p = default(0.5);        // Probabilità di inoltro al backend
+        bool fairSharing = default(false);
     submodules:
         taskGenerator: TaskGenerator {
             timeDistributionMean = parent.T;
@@ -35,6 +36,7 @@ network CloudSystem
             processingRate = parent.R;
             backendProcessingProbability = parent.p;
             pRandomStream = 2;
+            fairSharing = parent.fairSharing;
             
             @display("p=140,106");
         }

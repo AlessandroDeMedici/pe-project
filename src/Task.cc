@@ -66,7 +66,7 @@ void TaskGenerator::scheduleNext(cMessage *timer)
             throw cRuntimeError("Unknown distribution type: %c", timeDistributionType);
     }
 
-    EV_INFO << "Scheduling next message after " << delay << "s\n";
+//    EV_INFO << "Scheduling next message after " << delay << "s\n";
 
     scheduleAt(simTime() + delay, timer);
 }
@@ -81,6 +81,6 @@ void Sink::initialize()
 void Sink::handleMessage(cMessage *msg)
 {
   // destroy
-  delete msg;
+  cancelAndDelete(msg);
 }
 }; // namespace

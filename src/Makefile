@@ -33,7 +33,13 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/BackendServer.o $O/CloudNode.o $O/Task.o $O/Txc.o $O/Task_m.o
+OBJS = \
+    $O/BackendServer.o \
+    $O/CloudNode.o \
+    $O/Task.o \
+    $O/Txc.o \
+    $O/VMs.o \
+    $O/Task_m.o
 
 # Message files
 MSGFILES = \

@@ -19,6 +19,7 @@
 #include <omnetpp.h>
 #include "Task_m.h"
 #include <queue>
+#include "VMs.h"
 
 using namespace omnetpp;
 
@@ -30,9 +31,14 @@ namespace cloudcomputingworkloads {
 class CloudNode : public cSimpleModule
 {
   private:
+    int numVMs;
+    double processingRate;
+    bool fairSharing;
     double p;
     int pRandomStream;
     std::queue<Task *> *fifoQueue;
+    VMs *vm;
+    cMessage *nextEvent;
 
   protected:
     virtual void initialize();

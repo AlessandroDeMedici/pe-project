@@ -7,6 +7,7 @@ simple CloudNode
         double processingRate;
         double backendProcessingProbability;
         int pRandomStream;
+        bool fairSharing;
 
         @display("bgb=347,170");
     gates:
