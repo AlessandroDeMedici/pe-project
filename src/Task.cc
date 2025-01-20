@@ -17,12 +17,14 @@ void TaskGenerator::initialize()
   instrRandomStream = par("instrRandomStream");
 
 
-  timer_ = new cMessage("generationTimer");
-  scheduleNext(timer_);
+  timer_ = new Task("timer");
+  scheduleNext();
 }
 
-void TaskGenerator::handleMessage(cMessage *msg_timer)
+void TaskGenerator::handleMessage(cMessage *timer)
 {
+    Task *task = new Task("taskPacket");
+    
     double instr;
 
     switch (instrDistributionType) {
@@ -38,18 +40,17 @@ void TaskGenerator::handleMessage(cMessage *msg_timer)
         default:
             throw cRuntimeError("Unknown distribution type: %c", instrDistributionType);
     }
-
-    Task *task = new Task("task");
+    
     task->setTaskLength(instr);
-
+    
     send(task, "out");
-    scheduleNext(msg_timer);
-
+    
+    scheduleNext();
 }
 
-void TaskGenerator::scheduleNext(cMessage *timer)
+void TaskGenerator::scheduleNext()
 {
-
+    // TODO farlo con i nomi ivece che con i numeri
     simtime_t delay;
 
     switch (timeDistributionType) {
@@ -65,10 +66,8 @@ void TaskGenerator::scheduleNext(cMessage *timer)
         default:
             throw cRuntimeError("Unknown distribution type: %c", timeDistributionType);
     }
-
-//    EV_INFO << "Scheduling next message after " << delay << "s\n";
-
-    scheduleAt(simTime() + delay, timer);
+    
+    scheduleAt(simTime() + delay, timer_);
 }
 
 
@@ -80,7 +79,6 @@ void Sink::initialize()
 
 void Sink::handleMessage(cMessage *msg)
 {
-  // destroy
   cancelAndDelete(msg);
 }
-}; // namespace
+};

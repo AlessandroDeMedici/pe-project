@@ -15,15 +15,16 @@ class VMs
   };
   private:
     int nVMs;
-    int nActiveVMs;
-    // list
-    std::list<taskElement> *runningTasks;
+    
     simtime_t lastTaskUpdate;
     bool fairSharing;
     double processingRate;
     double currentProcessingRate();
 
   public:
+    int nActiveVMs;
+    std::list<taskElement> runningTasks;
+    VMs(){};
     VMs(int nVMs, double processingRate, bool fairSharing);
     ~VMs();
     bool availableVM();

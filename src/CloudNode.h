@@ -25,9 +25,6 @@ using namespace omnetpp;
 
 namespace cloudcomputingworkloads {
 
-/**
- * Implements the Txc simple module. See the NED file for more information.
- */
 class CloudNode : public cSimpleModule
 {
   private:
@@ -36,16 +33,17 @@ class CloudNode : public cSimpleModule
     bool fairSharing;
     double p;
     int pRandomStream;
-    std::queue<Task *> *fifoQueue;
-    VMs *vm;
+    std::queue<Task *> fifoQueue;
+    VMs vm;
     cMessage *nextEvent;
 
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
-    virtual void taskFinished(Task *task);
+    virtual void forwardFinishedTask(Task *task);
+    virtual void finish();
 };
 
-}; // namespace
+};
 
 #endif

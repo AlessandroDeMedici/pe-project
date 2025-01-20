@@ -17,6 +17,7 @@
 #define __MYFIRSTPROJECT_TASK_H
 
 #include <omnetpp.h>
+#include "Task_m.h"
 
 using namespace omnetpp;
 
@@ -35,12 +36,12 @@ class TaskGenerator : public cSimpleModule
   double instrDistributionMean;
   int instrRandomStream;
 
-  cMessage *timer_;
+  Task *timer_;
 
   protected:
     virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void scheduleNext(cMessage *timer);
+    virtual void handleMessage(cMessage *timer);
+    virtual void scheduleNext();
 };
 
 class Sink : public cSimpleModule

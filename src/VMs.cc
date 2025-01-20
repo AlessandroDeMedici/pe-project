@@ -12,7 +12,7 @@ VMs::VMs(int nVMs, double processingRate, bool fairSharing)
 {
     this->nVMs = nVMs;
     this->nActiveVMs = 0;
-    this->runningTasks = new list<taskElement>(); 
+    this->runningTasks = list<taskElement>(); 
     this->lastTaskUpdate = 0;
     this->fairSharing = fairSharing;
     this->processingRate = processingRate;
@@ -22,7 +22,6 @@ VMs::VMs(int nVMs, double processingRate, bool fairSharing)
 
 VMs::~VMs()
 {
-    delete runningTasks;
 }
 
 bool VMs::availableVM()
@@ -33,12 +32,13 @@ bool VMs::availableVM()
 simtime_t VMs::addTask(Task* task, simtime_t currentTime)
 {
     if (nActiveVMs < nVMs) {
-
-
       // decrement first element by executedInstructions if exists
-      if (!runningTasks->empty()) {
-        runningTasks->front().remainingInstructions -= (currentTime - lastTaskUpdate).dbl() * currentProcessingRate();
+      if (!runningTasks.empty()) {
+        runningTasks.front().remainingInstructions -= (currentTime - lastTaskUpdate).dbl() * currentProcessingRate();
       }
+      
+      if (runningTasks.front().remainingInstructions < 0)
+          throw cRuntimeError("Negative remaining instruction");
       
       double taskLength = task->getTaskLength();
       double accumulator = 0;
@@ -46,13 +46,14 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
       taskElement newTask;
       newTask.task = task;
 
-      for (list<taskElement>::iterator it = runningTasks->begin(); it != runningTasks->end(); it++) {
+      for (list<taskElement>::iterator it = runningTasks.begin(); it != runningTasks.end(); it++) {
         
         // insert task when accumulator is greater than taskLength
         if (accumulator + it->remainingInstructions >= taskLength) {
           // non dovrei metterlo nello heap ? 
           newTask.remainingInstructions = taskLength - accumulator;
-          runningTasks->insert(it, newTask);
+          runningTasks.insert(it, newTask);
+          accumulator += it->remainingInstructions;
           break;
         }
         accumulator += it->remainingInstructions;
@@ -61,13 +62,13 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
       // if task is not inserted, append it to the end
       if (accumulator < taskLength) {
         newTask.remainingInstructions = taskLength - accumulator;
-        runningTasks->push_back(newTask);
+        runningTasks.push_back(newTask);
       }
 
       lastTaskUpdate = currentTime;
       nActiveVMs++;
 
-      return runningTasks->front().remainingInstructions / currentProcessingRate();
+      return runningTasks.front().remainingInstructions / currentProcessingRate();
 
     } else {
         return -1;
@@ -78,17 +79,17 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
 Task* VMs::taskFinished(simtime_t &t, simtime_t currentTime)
 {
     // remove the task in front of the list and put to task pointer
-    Task *finishedTask = runningTasks->front().task;
+    Task *finishedTask = runningTasks.front().task;
 
-    runningTasks->pop_front();
+    runningTasks.pop_front();
     nActiveVMs--;
     lastTaskUpdate = currentTime;
     
-    if (runningTasks->empty()) {
+    if (runningTasks.empty()) {
         t = -1;
     } else {
 
-      t = runningTasks->front().remainingInstructions / currentProcessingRate();
+      t = runningTasks.front().remainingInstructions / currentProcessingRate();
     }
 
     return finishedTask;
@@ -96,6 +97,7 @@ Task* VMs::taskFinished(simtime_t &t, simtime_t currentTime)
 
 double VMs::currentProcessingRate()
 {
+    // TODO: usare vm.size() invece di nVMs se è salvato da qualche parte e non ricontato
     if (fairSharing) {
         return processingRate / nActiveVMs;
     } else {

@@ -41,7 +41,9 @@ network CloudSystem
             @display("p=140,106");
         }
         backendServer: BackendServer {
-            serverRate = parent.S;
+            backendDistributionMean = parent.S;
+            backendDistributionType = parent.S_type;
+            backendRandomStream = 3;
             
             @display("p=245,145");
         }
