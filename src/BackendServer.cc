@@ -38,7 +38,7 @@ void BackendServer::handleMessage(cMessage *msg)
     }
     
     char status[32];
-    sprintf(status, "Queue: %d", fifoQueue.size());
+    sprintf(status, "Queue: %ld", fifoQueue.size());
     getDisplayString().setTagArg("t", 0, status);
 }
 

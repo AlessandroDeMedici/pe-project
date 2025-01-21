@@ -16,6 +16,9 @@ simple TaskGenerator
 
 simple Sink
 {
+    parameters:
+        @signal[delay](type=double);
+        @statistic[delayStat](source="delay";record=mean, vector;);
     gates:
         input in;
 }

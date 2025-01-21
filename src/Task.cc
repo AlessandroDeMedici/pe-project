@@ -74,11 +74,14 @@ void TaskGenerator::scheduleNext()
 
 void Sink::initialize()
 {
-
+  delaySignal = registerSignal("delay");
 }
 
 void Sink::handleMessage(cMessage *msg)
 {
+  double travelTime = (simTime() - msg->getCreationTime()).dbl();
+  emit(delaySignal, travelTime);
+  
   cancelAndDelete(msg);
 }
 };

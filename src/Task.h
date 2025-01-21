@@ -46,6 +46,8 @@ class TaskGenerator : public cSimpleModule
 
 class Sink : public cSimpleModule
 {
+  private:
+    simsignal_t delaySignal;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
