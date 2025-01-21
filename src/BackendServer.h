@@ -34,6 +34,8 @@ class BackendServer : public cSimpleModule
   int backendRandomStream;
   std::queue<Task *> fifoQueue;
   bool scheduled;
+  simsignal_t delaySignal;
+  simsignal_t queueSignal;
 
   protected:
     virtual void initialize();

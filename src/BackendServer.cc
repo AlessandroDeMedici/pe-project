@@ -14,6 +14,9 @@ void BackendServer::initialize()
 
   fifoQueue = std::queue<Task *>();
   scheduled = false;
+
+  delaySignal = registerSignal("backendDelay");
+  queueSignal = registerSignal("backendQueue");
 }
 
 void BackendServer::handleMessage(cMessage *msg)
@@ -40,6 +43,8 @@ void BackendServer::handleMessage(cMessage *msg)
     char status[32];
     sprintf(status, "Queue: %ld", fifoQueue.size());
     getDisplayString().setTagArg("t", 0, status);
+
+    emit(queueSignal, fifoQueue.size());
 }
 
 void BackendServer::scheduleElaborationEnd(Task *msg)
@@ -59,8 +64,11 @@ void BackendServer::scheduleElaborationEnd(Task *msg)
             throw cRuntimeError("Unknown distribution type: %c", backendDistributionType);
     }
     
+    simtime_t backendDelay =  msg->getTaskLength() / processingRate;
+    emit(delaySignal, backendDelay.dbl());
+
     scheduled = true;
-    scheduleAt(simTime() + msg->getTaskLength() / processingRate, msg);
+    scheduleAt(simTime() + backendDelay, msg);
 }
 
 void BackendServer::finish()
