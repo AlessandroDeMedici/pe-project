@@ -1,8 +1,8 @@
 version 3
-run General-0-20250120-16:44:50-18231
+run General-0-20250121-12:23:18-5582
 attr configname General
-attr datetime 20250120-16:44:50
-attr datetimef 20250120-164450
+attr datetime 20250121-12:23:18
+attr datetimef 20250121-122318
 attr experiment General
 attr inifile cloudSystem.ini
 attr iterationvars ""
@@ -10,7 +10,7 @@ attr iterationvarsd ""
 attr iterationvarsf ""
 attr measurement ""
 attr network CloudSystem
-attr processid 18231
+attr processid 5582
 attr repetition 0
 attr replication #0
 attr resultdir results
@@ -24,9 +24,9 @@ config **.T_type 1
 config **.N 10
 config **.I 1000
 config **.I_type 1
-config **.R 8000
+config **.R 6000
 config **.fairSharing false
-config **.S 50
+config **.S 10000
 config **.S_type 1
 config **.p 0.5
 
@@ -40,25 +40,25 @@ par CloudSystem.taskGenerator instrDistributionMean 1000
 par CloudSystem.taskGenerator instrRandomStream 1
 par CloudSystem.cloudNode typename "\"cloudcomputingworkloads.CloudNode\""
 par CloudSystem.cloudNode numVMs 10
-par CloudSystem.cloudNode processingRate 8000
+par CloudSystem.cloudNode processingRate 6000
 par CloudSystem.cloudNode backendProcessingProbability 0.5
 par CloudSystem.cloudNode pRandomStream 2
 par CloudSystem.cloudNode fairSharing false
 par CloudSystem.backendServer typename "\"cloudcomputingworkloads.BackendServer\""
-par CloudSystem.backendServer backendDistributionMean 50
+par CloudSystem.backendServer backendDistributionMean 10000
 par CloudSystem.backendServer backendDistributionType 1
 par CloudSystem.backendServer backendRandomStream 3
 par CloudSystem.sink1 typename "\"cloudcomputingworkloads.Sink\""
 par CloudSystem.sink2 typename "\"cloudcomputingworkloads.Sink\""
 par CloudSystem typename "\"cloudcomputingworkloads.simulations.CloudSystem\""
 par CloudSystem N 10
-par CloudSystem R 8000
+par CloudSystem R 6000
 par CloudSystem T 1s
 attr unit s
 par CloudSystem T_type 1
 par CloudSystem I 1000
 par CloudSystem I_type 1
-par CloudSystem S 50
+par CloudSystem S 10000
 par CloudSystem S_type 1
 par CloudSystem p 0.5
 par CloudSystem fairSharing false

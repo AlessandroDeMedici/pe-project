@@ -13,13 +13,15 @@ void BackendServer::initialize()
   backendRandomStream = par("backendRandomStream");
 
   fifoQueue = std::queue<Task *>();
+  scheduled = false;
 }
 
 void BackendServer::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
         send(msg, "out");
-
+        scheduled = false;
+        
         if (!fifoQueue.empty()) {
             Task *nextTask = fifoQueue.front();
             fifoQueue.pop();
@@ -28,12 +30,16 @@ void BackendServer::handleMessage(cMessage *msg)
     } else {
         Task *task = check_and_cast<Task *>(msg);
 
-        if (fifoQueue.empty()) {
+        if (fifoQueue.empty() && !scheduled) {
           scheduleElaborationEnd(task);
         } else {
           fifoQueue.push(task);
         }
     }
+    
+    char status[32];
+    sprintf(status, "Queue: %d", fifoQueue.size());
+    getDisplayString().setTagArg("t", 0, status);
 }
 
 void BackendServer::scheduleElaborationEnd(Task *msg)
@@ -53,12 +59,18 @@ void BackendServer::scheduleElaborationEnd(Task *msg)
             throw cRuntimeError("Unknown distribution type: %c", backendDistributionType);
     }
     
+    scheduled = true;
     scheduleAt(simTime() + msg->getTaskLength() / processingRate, msg);
 }
 
 void BackendServer::finish()
 {
-  // TODO: strano che non si lamenti che non vengono distrutti gli eventi nella coda, da indagare
+  // deallocate messages in the queue
+  while (!fifoQueue.empty()) {
+    Task *task = fifoQueue.front();
+    fifoQueue.pop();
+    delete task;
+  }
 }
 
 }; // namespace

@@ -33,6 +33,7 @@ class BackendServer : public cSimpleModule
   int backendDistributionType;
   int backendRandomStream;
   std::queue<Task *> fifoQueue;
+  bool scheduled;
 
   protected:
     virtual void initialize();
