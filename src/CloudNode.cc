@@ -55,7 +55,7 @@ void CloudNode::handleMessage(cMessage *msg)
     EV << "Current active VMs: " << vm.nActiveVMs << "  VM list length: " << vm.runningTasks.size() << endl;
     
     char status[32];
-    sprintf(status, "Active VMs %d/%d\nQueue %d", vm.runningTasks.size(), numVMs, fifoQueue.size());
+    sprintf(status, "Active VMs %lu/%d\nQueue %lu", vm.runningTasks.size(), numVMs, fifoQueue.size());
     getDisplayString().setTagArg("t", 0, status);
 }
 

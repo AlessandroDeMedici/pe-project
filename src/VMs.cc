@@ -45,17 +45,22 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
       
       taskElement newTask;
       newTask.task = task;
+      
+      EV << "Task len: " << taskLength << endl;
 
       for (list<taskElement>::iterator it = runningTasks.begin(); it != runningTasks.end(); it++) {
         
-        // insert task when accumulator is greater than taskLength
         if (accumulator + it->remainingInstructions >= taskLength) {
-          // non dovrei metterlo nello heap ? 
           newTask.remainingInstructions = taskLength - accumulator;
           runningTasks.insert(it, newTask);
           accumulator += it->remainingInstructions;
+
+          // decrement the remaining instructions of the next task
+          it->remainingInstructions -= newTask.remainingInstructions;
+
           break;
         }
+
         accumulator += it->remainingInstructions;
       }
 
@@ -68,8 +73,9 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
       lastTaskUpdate = currentTime;
       nActiveVMs++;
 
+      printList();
+      
       return runningTasks.front().remainingInstructions / currentProcessingRate();
-
     } else {
         return -1;
     }
@@ -92,6 +98,7 @@ Task* VMs::taskFinished(simtime_t &t, simtime_t currentTime)
       t = runningTasks.front().remainingInstructions / currentProcessingRate();
     }
 
+    printList();
     return finishedTask;
 }
 
@@ -105,4 +112,10 @@ double VMs::currentProcessingRate()
     }
 }
 
-
+void VMs::printList()
+{
+    for (list<taskElement>::iterator it = runningTasks.begin(); it != runningTasks.end(); it++) {
+        EV << it->remainingInstructions << " -> ";
+    }
+    EV << "end" << endl;
+}

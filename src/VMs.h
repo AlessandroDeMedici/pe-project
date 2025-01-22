@@ -30,7 +30,7 @@ class VMs
     bool availableVM();
     simtime_t addTask(Task* task, simtime_t currentTime);
     Task* taskFinished(simtime_t &t, simtime_t currentTime);
-    
+    void printList();    
 };
 
 #endif
