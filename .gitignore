@@ -1,2 +1,6 @@
 out/*
 simulations/results/*
+.metadata/*
+src/Makefile.*
+src/*.exe
+src/Task_m.*
