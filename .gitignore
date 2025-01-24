@@ -1,6 +1,8 @@
 out/*
 simulations/results/*
+simulations/*.anf
 .metadata/*
 src/Makefile.*
 src/*.exe
 src/Task_m.*
+src/CloudComputingWorkloads*
