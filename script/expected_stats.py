@@ -29,14 +29,16 @@ for c in config.sections():
     Nvm = int(config[c]['*.N'])
     I = float(config[c]['*.I'])
     R_ = float(config[c]['*.R'])
+    p = float(config[c]['*.p'])
+    S = float(config[c]['*.S'].replace('s', ''))
 
     print('T:', T)
     print('Nvm:', Nvm)
     print('I:', I)
     print('R:', R_)
 
-    for fairshare in [True, False]:
-        if fairshare:
+    for mode in ["fairshare", "segregation", "backed"]:
+        if mode == "fairshare":
             lamda = 1 / T
             mu = R_ / I
             u = lamda / mu
@@ -50,7 +52,7 @@ for c in config.sections():
             W = Nq / lamda
             R = N / lamda
             c = part1 + part2
-        else:
+        elif mode == "segregation":
             # Segregation
             lamda = 1 / T
             mu = R_ / (I * Nvm)
@@ -64,8 +66,20 @@ for c in config.sections():
             W = Nq / lamda
             R = W + 1 / mu
             c = u
+        elif mode == "backed":
+            lamda = 1 / T * p
+            mu = S
+            rho = lamda / mu
+            u = rho
+            p0 = 1 - rho
 
-        print(f'\n\nFairshare: {fairshare}')
+            N = rho / (1 - rho)
+            Nq = N - rho
+            W = Nq / lamda
+            R = N / lamda
+            c = rho
+
+        print(f'\n\n{mode}:\n')
         print('lamda:', lamda)
         print('rho:', rho)
         print('u:', u)

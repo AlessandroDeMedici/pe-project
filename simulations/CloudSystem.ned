@@ -9,16 +9,17 @@ import cloudcomputingworkloads.Sink;
 network CloudSystem
 {
     parameters:
-        int N = default(5);        		// Numero di macchine virtuali
-        double R = default(1000);       // Tasso totale di elaborazione (instructions/sec)
-        double T @unit("s");						// Tempo generazione task
+        int N;        					// Numero di macchine virtuali
+        double R;       				// Tasso totale di elaborazione (instructions/sec)
+        double T @unit("s");			// Tempo generazione task
         int T_type;
         double I;						// Lunghezza task
         int I_type;
-        double S;						// Backend
+        double S @unit("s");			// Backend
         int S_type;
-        double p = default(0.5);        // Probabilità di inoltro al backend
-        bool fairSharing = default(false);
+        double p;        				// Probabilità di inoltro al backend
+        bool fairSharing;
+        
     submodules:
         taskGenerator: TaskGenerator {
             timeDistributionMean = parent.T;

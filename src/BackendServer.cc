@@ -15,26 +15,35 @@ void BackendServer::initialize()
   fifoQueue = std::queue<Task *>();
   scheduled = false;
 
-  delaySignal = registerSignal("backendDelay");
-  queueSignal = registerSignal("backendQueue");
+  Nq = registerSignal("backendNq");
+  W = registerSignal("backendW");
+  R = registerSignal("backendR");
+  CPU = registerSignal("backendCPU");
 }
 
 void BackendServer::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage()) {
+        emit(R, (simTime() - check_and_cast<Task *>(msg)->getNodeArrivalTime()).dbl());
         send(msg, "out");
+
         scheduled = false;
         
         if (!fifoQueue.empty()) {
             Task *nextTask = fifoQueue.front();
+            emit(W, (simTime() - nextTask->getArrivalTime()).dbl());  // time spent in the queue
             fifoQueue.pop();
             scheduleElaborationEnd(nextTask);
         }
     } else {
         Task *task = check_and_cast<Task *>(msg);
 
+        task->setNodeArrivalTime(simTime());
+
         if (fifoQueue.empty() && !scheduled) {
           scheduleElaborationEnd(task);
+
+          emit(W, 0.0); // task is being processed immediately
         } else {
           fifoQueue.push(task);
         }
@@ -44,7 +53,8 @@ void BackendServer::handleMessage(cMessage *msg)
     sprintf(status, "Queue: %ld", fifoQueue.size());
     getDisplayString().setTagArg("t", 0, status);
 
-    emit(queueSignal, fifoQueue.size());
+    emit(Nq, fifoQueue.size());
+    emit(CPU, (int) scheduled);
 }
 
 void BackendServer::scheduleElaborationEnd(Task *msg)
@@ -63,8 +73,6 @@ void BackendServer::scheduleElaborationEnd(Task *msg)
         default:
             throw cRuntimeError("Unknown distribution type: %c", backendDistributionType);
     }
-    
-    emit(delaySignal, backendDelay);
 
     scheduled = true;
     scheduleAt(simTime() + backendDelay, msg);
