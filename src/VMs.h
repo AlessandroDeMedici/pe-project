@@ -1,5 +1,5 @@
-#ifndef __VMs_h
-#define __VMs_h
+#ifndef __CLOUDCOMPUTINGWORKLOADS_VMS_H
+#define __CLOUDCOMPUTINGWORKLOADS_VMS_H
 
 #include <list>
 #include <omnetpp.h>
