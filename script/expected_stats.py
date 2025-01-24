@@ -10,11 +10,6 @@ config.read(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../simula
 # get all [Config **] sections
 print(config.sections())
 
-def f(Nvm, u):
-    s = 0
-    for n in range(Nvm, 9999999):
-        s += (1-u)*u**n * (n-Nvm)
-    return s
 
 for c in config.sections():
     if not c.startswith('Config'):
@@ -37,11 +32,14 @@ for c in config.sections():
     print('I:', I)
     print('R:', R_)
 
-    for mode in ["fairshare", "segregation", "backed"]:
+    baskendTaskTime = -1
+
+    for mode in ["backend", "fairshare", "segregation"]:
+        totalTaskTime = -1
         if mode == "fairshare":
-            lamda = 1 / T
+            lambda_ = 1 / T
             mu = R_ / I
-            u = lamda / mu
+            u = lambda_ / mu
             p0 = 1-u
             rho = 0
  
@@ -49,38 +47,44 @@ for c in config.sections():
             part2 =  Nvm*u**Nvm
             N = u / (1 - u)
             Nq = N - part1 - part2
-            W = Nq / lamda
-            R = N / lamda
+            W = Nq / lambda_
+            R = N / lambda_
             c = part1 + part2
+
+            totalTaskTime = R + baskendTaskTime * p
         elif mode == "segregation":
             # Segregation
-            lamda = 1 / T
+            lambda_ = 1 / T
             mu = R_ / (I * Nvm)
-            rho = lamda * I / R_
-            u = lamda / mu
+            rho = lambda_ * I / R_
+            u = lambda_ / mu
 
             p0 = 1 / (sum([u**k / factorial(k) for k in range(Nvm)]) + u**Nvm / factorial(Nvm) / (1 - rho))
             
             Nq = u**Nvm / factorial(Nvm) * p0 * rho / ((1 - rho)**2)
             N = Nq + u
-            W = Nq / lamda
+            W = Nq / lambda_
             R = W + 1 / mu
             c = u
-        elif mode == "backed":
-            lamda = 1 / T * p
+
+            totalTaskTime = R + baskendTaskTime * p
+        elif mode == "backend":
+            lambda_ = 1 / T * p
             mu = S
-            rho = lamda / mu
+            rho = lambda_ / mu
             u = rho
             p0 = 1 - rho
 
             N = rho / (1 - rho)
             Nq = N - rho
-            W = Nq / lamda
-            R = N / lamda
+            W = Nq / lambda_
+            R = N / lambda_
             c = rho
 
+            baskendTaskTime = R
+
         print(f'\n\n{mode}:\n')
-        print('lamda:', lamda)
+        print('lambda_:', lambda_)
         print('rho:', rho)
         print('u:', u)
         print('p0:', p0)
@@ -90,3 +94,5 @@ for c in config.sections():
         print('W:', W)
         print('R:', R)
         print('c:', c)
+        if mode != "backend":
+            print('totalTaskTime:', totalTaskTime)

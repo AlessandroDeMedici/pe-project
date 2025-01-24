@@ -19,7 +19,7 @@ network CloudSystem
         int S_type;
         double p;        				// Probabilità di inoltro al backend
         bool fairSharing;
-        
+
     submodules:
         taskGenerator: TaskGenerator {
             timeDistributionMean = parent.T;
@@ -46,17 +46,14 @@ network CloudSystem
             backendDistributionType = parent.S_type;
             backendRandomStream = 3;
 
-            @display("p=359,169;i=device/server");
+            @display("p=361,210;i=device/server");
         }
-        sink1: Sink {
-            @display("p=514,68;i=block/sink");
-        }
-        sink2: Sink {
-            @display("p=514,188;i=block/sink");
+        sink: Sink {
+            @display("p=498,135;i=block/sink");
         }
     connections:
         taskGenerator.out --> cloudNode.in;
-        cloudNode.sink --> sink1.in;
+        cloudNode.sink --> sink.inCloudNode;
         cloudNode.backend --> backendServer.in;
-        backendServer.out --> sink2.in;
+        backendServer.out --> sink.inBackend;
 }

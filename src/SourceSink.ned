@@ -4,7 +4,7 @@ simple TaskGenerator
 {
     parameters:
         int timeDistributionType;
-        double timeDistributionMean @unit(s);
+        double timeDistributionMean @unit("s");
         int timeRandomStream;
         
         int instrDistributionType;
@@ -17,8 +17,9 @@ simple TaskGenerator
 simple Sink
 {
     parameters:
-        @signal[delay](type=double);
-        @statistic[delayStat](source="delay";record=mean, vector?;);
+        @signal[taskTime](type=double);
+        @statistic[taskTimeStat](source="taskTime";record=vector?, mean;);
     gates:
-        input in;
+        input inCloudNode;
+        input inBackend;
 }

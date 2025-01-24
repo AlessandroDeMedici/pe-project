@@ -8,9 +8,6 @@ using namespace omnetpp;
 
 namespace cloudcomputingworkloads {
 
-/**
- * Implements the Txc simple module. See the NED file for more information.
- */
 class TaskGenerator : public cSimpleModule
 {
   int timeDistributionType;
@@ -32,12 +29,12 @@ class TaskGenerator : public cSimpleModule
 class Sink : public cSimpleModule
 {
   private:
-    simsignal_t delaySignal;
+    simsignal_t taskTime;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 };
 
-}; // namespace
+};
 
 #endif
