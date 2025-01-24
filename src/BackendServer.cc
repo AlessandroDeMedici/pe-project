@@ -49,23 +49,22 @@ void BackendServer::handleMessage(cMessage *msg)
 
 void BackendServer::scheduleElaborationEnd(Task *msg)
 {
-    double processingRate;
+    double backendDelay;
     switch (backendDistributionType) {
         case 0:
-            processingRate = backendDistributionMean;
+            backendDelay = backendDistributionMean;
             break;
         case 1:
-            processingRate = exponential(backendDistributionMean, backendRandomStream);
+            backendDelay = exponential(backendDistributionMean, backendRandomStream);
             break;
         case 2:
-            processingRate = uniform(0, 2*backendDistributionMean, backendRandomStream);
+            backendDelay = uniform(0, 2*backendDistributionMean, backendRandomStream);
             break;
         default:
             throw cRuntimeError("Unknown distribution type: %c", backendDistributionType);
     }
     
-    simtime_t backendDelay =  msg->getTaskLength() / processingRate;
-    emit(delaySignal, backendDelay.dbl());
+    emit(delaySignal, backendDelay);
 
     scheduled = true;
     scheduleAt(simTime() + backendDelay, msg);

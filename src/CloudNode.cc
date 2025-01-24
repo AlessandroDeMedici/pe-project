@@ -23,6 +23,11 @@ void CloudNode::initialize()
 
   fifoQueue = std::queue<Task *>();
   vm = VMs(numVMs, processingRate, fairSharing);
+
+  Nq = registerSignal("cloudNodeNq");
+  W = registerSignal("cloudNodeW");
+  R = registerSignal("cloudNodeR");
+  activeVMs = registerSignal("cloudNodeActiveVMs");
 }
 
 void CloudNode::handleMessage(cMessage *msg)
@@ -35,12 +40,15 @@ void CloudNode::handleMessage(cMessage *msg)
             Task *task = fifoQueue.front();
             fifoQueue.pop();
             t = vm.addTask(task, simTime());
+            emit(W, (simTime() - task->getArrivalTime()).dbl());  // time spent in the queue
         }
         
+        emit(R, (simTime() - finishedTask->getArrivalTime()).dbl());  // time spent in the system
         forwardFinishedTask(finishedTask);
     } else {
       if (vm.availableVM()) {
           t = vm.addTask(check_and_cast<Task *>(msg), simTime());
+          emit(W, 0.0);     // 0 means that the task was processed immediately
       } else {
           fifoQueue.push(check_and_cast<Task *>(msg));
       } 
@@ -57,6 +65,9 @@ void CloudNode::handleMessage(cMessage *msg)
     char status[32];
     sprintf(status, "Active VMs %lu/%d\nQueue %lu", vm.runningTasks.size(), numVMs, fifoQueue.size());
     getDisplayString().setTagArg("t", 0, status);
+  
+    emit(Nq, fifoQueue.size());
+    emit(activeVMs, vm.runningTasks.size());
 }
 
 void CloudNode::finish()

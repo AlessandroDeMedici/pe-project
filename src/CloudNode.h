@@ -37,6 +37,11 @@ class CloudNode : public cSimpleModule
     VMs vm;
     cMessage *nextEvent;
 
+    simsignal_t Nq;
+    simsignal_t W;
+    simsignal_t R;
+    simsignal_t activeVMs;
+
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
