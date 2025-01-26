@@ -1,6 +1,12 @@
 #ifndef __CLOUDCOMPUTINGWORKLOADS_BACKENDSERVER_H
 #define __CLOUDCOMPUTINGWORKLOADS_BACKENDSERVER_H
 
+#include "debugOptions.h"
+
+#ifdef DEBUG_COHERENCE
+#include "CoherenceCheck.h"
+#endif
+
 #include "Task_m.h"
 #include <omnetpp.h>
 #include <queue>
@@ -10,6 +16,9 @@ using namespace omnetpp;
 namespace cloudcomputingworkloads {
 
 class BackendServer : public cSimpleModule
+#ifdef DEBUG_COHERENCE
+, public CoherenceCheck 
+#endif
 {
   double backendDistributionMean;
   int backendDistributionType;

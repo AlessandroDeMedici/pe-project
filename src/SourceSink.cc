@@ -1,5 +1,5 @@
 #include "SourceSink.h"
-#include "Task_m.h"
+
 
 namespace cloudcomputingworkloads {
 
@@ -43,6 +43,29 @@ void TaskGenerator::handleMessage(cMessage *timer)
     
     task->setTaskLength(instr);
     
+    #ifdef DEBUG_COHERENCE
+    cModule *parent = getParentModule();
+    unsigned long totTasks = 0;
+
+    for (cModule::SubmoduleIterator it(parent); !it.end(); ++it) {
+        cModule *submodule = *it;
+        if (submodule != this) { // Exclude taskGenerator
+            CoherenceCheck *module = dynamic_cast<CoherenceCheck *>(submodule);
+            if (module) {
+                totTasks += module->getNTasks();
+            }
+        }
+    }
+
+    EV << "Total processed/ing tasks: " << totTasks << " vs " << getNTasks() << endl;
+    
+    if (totTasks != getNTasks()) {
+      throw cRuntimeError("Mismatch generated %lu tasks, processed %lu", getNTasks(), totTasks);
+    }
+    
+    incrementNTasks();
+    #endif
+    
     send(task, "out");
     
     scheduleNext();
@@ -82,5 +105,9 @@ void Sink::handleMessage(cMessage *msg)
   emit(taskTime, (simTime() - msg->getCreationTime()).dbl());
   
   cancelAndDelete(msg);
+  
+  #ifdef DEBUG_COHERENCE
+  incrementNTasks();
+  #endif
 }
 };

@@ -58,16 +58,25 @@ void CloudNode::handleMessage(cMessage *msg)
         cancelEvent(nextEvent);
         scheduleAt(simTime() + t, nextEvent);
     }
+    
+    #ifdef DEBUG_PRINT_STATE
     EV << (msg==nextEvent ? "self message" : "external message") << endl;
     EV << "Current queue length: " << fifoQueue.size() << endl;
     EV << "Current active VMs: " << vm.nActiveVMs << "  VM list length: " << vm.runningTasks.size() << endl;
+    #endif
     
+    #ifdef DEBUG_GUI_STATE
     char status[32];
     sprintf(status, "Active VMs %lu/%d\nQueue %lu", vm.runningTasks.size(), numVMs, fifoQueue.size());
     getDisplayString().setTagArg("t", 0, status);
-  
+    #endif
+    
     emit(Nq, fifoQueue.size());
     emit(activeVMs, vm.runningTasks.size());
+    
+    #ifdef DEBUG_COHERENCE
+    setNTasks(fifoQueue.size() + vm.runningTasks.size());
+    #endif
 }
 
 void CloudNode::finish()

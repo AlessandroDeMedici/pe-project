@@ -1,6 +1,12 @@
 #ifndef __CLOUDCOMPUTINGWORKLOADS_SOURCESINK_H
 #define __CLOUDCOMPUTINGWORKLOADS_SOURCESINK_H
 
+#include "debugOptions.h"
+
+#ifdef DEBUG_COHERENCE
+#include "CoherenceCheck.h"
+#endif
+
 #include <omnetpp.h>
 #include "Task_m.h"
 
@@ -9,6 +15,9 @@ using namespace omnetpp;
 namespace cloudcomputingworkloads {
 
 class TaskGenerator : public cSimpleModule
+#ifdef DEBUG_COHERENCE
+, public CoherenceCheck 
+#endif
 {
   int timeDistributionType;
   double timeDistributionMean;
@@ -27,6 +36,9 @@ class TaskGenerator : public cSimpleModule
 };
 
 class Sink : public cSimpleModule
+#ifdef DEBUG_COHERENCE
+, public CoherenceCheck 
+#endif
 {
   private:
     simsignal_t taskTime;

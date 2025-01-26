@@ -5,8 +5,6 @@
 using namespace omnetpp;
 using namespace std;
 
-// constructor
-//
 
 VMs::VMs(int nVMs, double processingRate, bool fairSharing)
 {
@@ -18,11 +16,6 @@ VMs::VMs(int nVMs, double processingRate, bool fairSharing)
     this->processingRate = processingRate;
 }
 
-// destructor
-
-VMs::~VMs()
-{
-}
 
 bool VMs::availableVM()
 {
@@ -98,7 +91,10 @@ Task* VMs::taskFinished(simtime_t &t, simtime_t currentTime)
       t = runningTasks.front().remainingInstructions / currentProcessingRate();
     }
 
+    #ifdef DEBUG_PRINT_STATE
     printList();
+    #endif
+    
     return finishedTask;
 }
 

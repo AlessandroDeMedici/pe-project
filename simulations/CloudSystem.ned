@@ -30,7 +30,7 @@ network CloudSystem
             instrDistributionType = parent.I_type;
             instrRandomStream = 1;
 
-            @display("p=42,135;i=block/source");
+            @display("p=84,135;i=block/source");
         }
         cloudNode: CloudNode {
             numVMs = parent.N;

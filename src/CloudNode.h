@@ -1,16 +1,25 @@
 #ifndef __CLOUDCOMPUTINGWORKLOADS_CLOUDNODE_H
 #define __CLOUDCOMPUTINGWORKLOADS_CLOUDNODE_H
 
-#include <omnetpp.h>
+#include "debugOptions.h"
+
+#ifdef DEBUG_COHERENCE
+#include "CoherenceCheck.h"
+#endif
+
 #include "Task_m.h"
-#include <queue>
 #include "VMs.h"
+#include <omnetpp.h>
+#include <queue>
 
 using namespace omnetpp;
 
 namespace cloudcomputingworkloads {
 
 class CloudNode : public cSimpleModule
+#ifdef DEBUG_COHERENCE
+, public CoherenceCheck 
+#endif
 {
   private:
     int numVMs;

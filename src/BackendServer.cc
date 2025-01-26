@@ -1,6 +1,4 @@
 #include "BackendServer.h"
-#include "Task_m.h"
-#include <queue>
 
 namespace cloudcomputingworkloads {
 
@@ -55,6 +53,10 @@ void BackendServer::handleMessage(cMessage *msg)
 
     emit(Nq, fifoQueue.size());
     emit(CPU, (int) scheduled);
+    
+    #ifdef DEBUG_COHERENCE
+    setNTasks(fifoQueue.size() + scheduled);
+    #endif
 }
 
 void BackendServer::scheduleElaborationEnd(Task *msg)

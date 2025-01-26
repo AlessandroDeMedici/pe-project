@@ -26,7 +26,6 @@ class VMs
     std::list<taskElement> runningTasks;
     VMs(){};
     VMs(int nVMs, double processingRate, bool fairSharing);
-    ~VMs();
     bool availableVM();
     simtime_t addTask(Task* task, simtime_t currentTime);
     Task* taskFinished(simtime_t &t, simtime_t currentTime);
