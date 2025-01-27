@@ -19,6 +19,10 @@ network CloudSystem
         int S_type;
         double p;        				// Probabilità di inoltro al backend
         bool fairSharing;
+        
+        // Utility for some simulations
+        int variable;
+        int range;
 
     submodules:
         taskGenerator: TaskGenerator {
