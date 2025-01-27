@@ -21,8 +21,8 @@ network CloudSystem
         bool fairSharing;
         
         // Utility for some simulations
-        int variable;
-        int range;
+        int variable = default(0);
+        int range = default(0);
 
     submodules:
         taskGenerator: TaskGenerator {
