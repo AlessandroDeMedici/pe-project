@@ -57,31 +57,33 @@ for i in range(len(resampled_time)):
 
 print(f"Computed variance")
 
-WINDOW_SIZE = 100 # in seconds
+WINDOW_SIZE = 20 # in seconds
 right_index = 0
 for left_index in range(len(resampled_time) - WINDOW_SIZE):
-    continue   
-    # set right index to the last time <= time_window
+    continue
+# set right index to the last time <= time_window
     while right_index < len(resampled_time)-1 and resampled_time[right_index] - resampled_time[left_index] < WINDOW_SIZE:
         right_index += 1
     actual_window_size = resampled_time[right_index] - resampled_time[left_index]
-    moving_average.append(sum(average[left_index:right_index]) / actual_window_size)
+
+    s = sum(average[i]*(resampled_time[i+1] - resampled_time[i]) for i in range(left_index, right_index))
+    moving_average.append(s / actual_window_size)
     
-    #print(left_index, right_index, actual_window_size, end='\r')
+    print(left_index, right_index, actual_window_size, end='\r')
 
 print(f"Computed moving average with window size {WINDOW_SIZE} seconds")
 
 # plot average with variance confidence interval at 95%
 plt.plot(resampled_time, average, label='Average')
 #plt.plot(resampled_time[:len(moving_average)], moving_average, label=f'Moving Average with window size {WINDOW_SIZE} seconds')
-plt.fill_between(resampled_time, [average[i] - 1.96 * variance[i] for i in range(len(variance))], [average[i] + 1.96 * variance[i] for i in range(len(variance))], alpha=0.5, label='95% Confidence Interval')
+plt.fill_between(resampled_time, [average[i] - variance[i] for i in range(len(variance))], [average[i] + variance[i] for i in range(len(variance))], alpha=0.5, label='Variance')
 
 # final expected value line
 stabline = [average[-1] for i in range(len(resampled_time))]
 plt.plot(resampled_time, stabline, label='Expected value', linestyle='--')
 
 # set log x scale with lines
-plt.xscale('log')
+#plt.xscale('log')
 plt.grid(True, which="both", ls="--")
 
 plt.xlabel('Time (s)')
