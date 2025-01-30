@@ -23,6 +23,9 @@ simple CloudNode
         
         @statistic[cloudNodeStatN](source="cloudNodeNq+cloudNodeActiveVMs";record=vector?,timeavg,vector(timeavg)?;);
         
+        @signal[cloudNodeInterDepartureTime](type=double);
+        @statistic[cloudNodeStatInterDepartureTime](source="cloudNodeInterDepartureTime";record=vector?,mean,vector(mean)?;);
+        
         @display("bgb=347,170");
     gates:
         input in;

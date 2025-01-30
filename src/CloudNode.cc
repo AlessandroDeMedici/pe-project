@@ -24,10 +24,13 @@ void CloudNode::initialize()
   fifoQueue = std::queue<Task *>();
   vm = VMs(numVMs, processingRate, fairSharing);
 
+  lastDepartureTime = 0;
+
   Nq = registerSignal("cloudNodeNq");
   W = registerSignal("cloudNodeW");
   R = registerSignal("cloudNodeR");
   activeVMs = registerSignal("cloudNodeActiveVMs");
+  interDepartureTime = registerSignal("cloudNodeInterDepartureTime");
 }
 
 void CloudNode::handleMessage(cMessage *msg)
@@ -43,6 +46,11 @@ void CloudNode::handleMessage(cMessage *msg)
             emit(W, (simTime() - task->getArrivalTime()).dbl());  // time spent in the queue
         }
         
+        if (lastDepartureTime != 0) {
+            emit(interDepartureTime, (simTime() - lastDepartureTime).dbl());
+        }
+        lastDepartureTime = simTime();
+
         emit(R, (simTime() - finishedTask->getArrivalTime()).dbl());  // time spent in the system
         forwardFinishedTask(finishedTask);
     } else {

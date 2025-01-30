@@ -31,10 +31,13 @@ class CloudNode : public cSimpleModule
     VMs vm;
     cMessage *nextEvent;
 
+    simtime_t lastDepartureTime;
+
     simsignal_t Nq;
     simsignal_t W;
     simsignal_t R;
     simsignal_t activeVMs;
+    simsignal_t interDepartureTime;
 
   protected:
     virtual void initialize();
