@@ -3,9 +3,8 @@ package cloudcomputingworkloads;
 simple BackendServer
 {
     parameters:
-        double backendDistributionMean @unit(s);
+        double S @unit("Hz");
         int backendDistributionType;
-        int backendRandomStream;
         
         @signal[backendNq](type=unsigned long);
         @statistic[backendStatNq](source="backendNq";record=vector?,timeavg,vector(timeavg)?;);

@@ -4,12 +4,10 @@ simple TaskGenerator
 {
     parameters:
         int timeDistributionType;
-        double timeDistributionMean @unit("s");
-        int timeRandomStream;
+        double T @unit("s");
         
         int instrDistributionType;
-        double instrDistributionMean;
-        int instrRandomStream;
+        double I;
     gates:
         output out;
 }

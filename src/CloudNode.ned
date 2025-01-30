@@ -3,10 +3,9 @@ package cloudcomputingworkloads;
 simple CloudNode
 {
     parameters:
-        int numVMs = default(5);
-        double processingRate;
-        double backendProcessingProbability;
-        int pRandomStream;
+        int N;
+        double R;
+        double p;
         bool fairSharing;
 
 		@signal[cloudNodeNq](type=unsigned long);

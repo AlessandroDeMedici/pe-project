@@ -9,12 +9,10 @@ Define_Module(Sink);
 void TaskGenerator::initialize()
 {
   timeDistributionType = par("timeDistributionType");
-  timeDistributionMean = par("timeDistributionMean");
-  timeRandomStream = par("timeRandomStream");
+  timeDistributionMean = par("T");
 
   instrDistributionType = par("instrDistributionType");
-  instrDistributionMean = par("instrDistributionMean");
-  instrRandomStream = par("instrRandomStream");
+  instrDistributionMean = par("I");
 
 
   timer_ = new Task("timer");
@@ -32,10 +30,10 @@ void TaskGenerator::handleMessage(cMessage *timer)
             instr = instrDistributionMean;
             break;
         case 1:
-            instr = exponential(instrDistributionMean, instrRandomStream);
+            instr = exponential(instrDistributionMean, 1);
             break;
         case 2:
-            instr = uniform(0, 2*instrDistributionMean, instrRandomStream);
+            instr = uniform(0, 2*instrDistributionMean, 1);
             break;
         default:
             throw cRuntimeError("Unknown distribution type: %c", instrDistributionType);
@@ -81,10 +79,10 @@ void TaskGenerator::scheduleNext()
             delay = timeDistributionMean;
             break;
         case 1:
-            delay = exponential(timeDistributionMean, timeRandomStream);
+            delay = exponential(timeDistributionMean, 0);
             break;
         case 2:
-            delay = uniform(0, 2*timeDistributionMean, timeRandomStream);
+            delay = uniform(0, 2*timeDistributionMean, 0);
             break;
         default:
             throw cRuntimeError("Unknown distribution type: %c", timeDistributionType);

@@ -21,11 +21,9 @@ class TaskGenerator : public cSimpleModule
 {
   int timeDistributionType;
   double timeDistributionMean;
-  int timeRandomStream;
 
   int instrDistributionType;
   double instrDistributionMean;
-  int instrRandomStream;
 
   Task *timer_;
 

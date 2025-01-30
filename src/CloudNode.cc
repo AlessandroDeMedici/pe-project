@@ -11,11 +11,10 @@ Define_Module(CloudNode);
 
 void CloudNode::initialize()
 {
-  numVMs = par("numVMs");
-  processingRate = par("processingRate");
+  numVMs = par("N");
+  processingRate = par("R");
 
-  pRandomStream = par("pRandomStream");
-  p = par("backendProcessingProbability");
+  p = par("p");
   
   fairSharing = par("fairSharing");
 
@@ -103,7 +102,7 @@ void CloudNode::finish()
 
 void CloudNode::forwardFinishedTask(Task *task)
 {
-    double random_val = uniform(0, 1, pRandomStream);
+    double random_val = uniform(0, 1, 0);
     if (random_val < p) {
         send(task, "backend");
     } else {

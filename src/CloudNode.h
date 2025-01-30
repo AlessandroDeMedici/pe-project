@@ -26,7 +26,7 @@ class CloudNode : public cSimpleModule
     double processingRate;
     bool fairSharing;
     double p;
-    int pRandomStream;
+
     std::queue<Task *> fifoQueue;
     VMs vm;
     cMessage *nextEvent;

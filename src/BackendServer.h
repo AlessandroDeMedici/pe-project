@@ -20,9 +20,9 @@ class BackendServer : public cSimpleModule
 , public CoherenceCheck 
 #endif
 {
-  double backendDistributionMean;
+  double rate;
   int backendDistributionType;
-  int backendRandomStream;
+
   std::queue<Task *> fifoQueue;
   bool scheduled;
     

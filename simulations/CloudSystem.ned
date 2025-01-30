@@ -8,48 +8,19 @@ import cloudcomputingworkloads.Sink;
 
 network CloudSystem
 {
-    parameters:
-        int N;        					// Numero di macchine virtuali
-        double R;       				// Tasso totale di elaborazione (instructions/sec)
-        double T @unit("s");			// Tempo generazione task
-        int T_type;
-        double I;						// Lunghezza task
-        int I_type;
-        double S @unit("s");			// Backend
-        int S_type;
-        double p;        				// Probabilità di inoltro al backend
-        bool fairSharing;
-        
+    parameters:        
         // Utility for some simulations
         int variable = default(0);
         int range = default(0);
 
     submodules:
         taskGenerator: TaskGenerator {
-            timeDistributionMean = parent.T;
-            timeDistributionType = parent.T_type;
-            timeRandomStream = 0;
-
-            instrDistributionMean = parent.I;
-            instrDistributionType = parent.I_type;
-            instrRandomStream = 1;
-
             @display("p=84,135;i=block/source");
         }
         cloudNode: CloudNode {
-            numVMs = parent.N;
-            processingRate = parent.R;
-            backendProcessingProbability = parent.p;
-            pRandomStream = 2;
-            fairSharing = parent.fairSharing;
-
             @display("p=217,135;i=misc/cloud");
         }
         backendServer: BackendServer {
-            backendDistributionMean = parent.S;
-            backendDistributionType = parent.S_type;
-            backendRandomStream = 3;
-
             @display("p=361,210;i=device/server");
         }
         sink: Sink {

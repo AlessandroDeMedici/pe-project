@@ -30,8 +30,11 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
         runningTasks.front().remainingInstructions -= (currentTime - lastTaskUpdate).dbl() * currentProcessingRate();
       }
       
+      if (runningTasks.front().remainingInstructions < 0 && runningTasks.front().remainingInstructions > -0.001)
+        runningTasks.front().remainingInstructions = 0;
+      
       if (runningTasks.front().remainingInstructions < 0)
-          throw cRuntimeError("Negative remaining instruction");
+          throw cRuntimeError("Negative remaining instruction %f (%f - %f), %f", runningTasks.front().remainingInstructions, currentTime.dbl(), lastTaskUpdate.dbl(), currentProcessingRate());
       
       double taskLength = task->getTaskLength();
       double accumulator = 0;

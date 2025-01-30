@@ -6,9 +6,8 @@ Define_Module(BackendServer);
 
 void BackendServer::initialize()
 {
-  backendDistributionMean = par("backendDistributionMean"); 
+  rate = par("S");
   backendDistributionType = par("backendDistributionType");
-  backendRandomStream = par("backendRandomStream");
 
   fifoQueue = std::queue<Task *>();
   scheduled = false;
@@ -64,13 +63,13 @@ void BackendServer::scheduleElaborationEnd(Task *msg)
     double backendDelay;
     switch (backendDistributionType) {
         case 0:
-            backendDelay = backendDistributionMean;
+            backendDelay = 1/rate;
             break;
         case 1:
-            backendDelay = exponential(backendDistributionMean, backendRandomStream);
+            backendDelay = exponential(1/rate, 0);
             break;
         case 2:
-            backendDelay = uniform(0, 2*backendDistributionMean, backendRandomStream);
+            backendDelay = uniform(0, 2/rate, 0);
             break;
         default:
             throw cRuntimeError("Unknown distribution type: %c", backendDistributionType);
