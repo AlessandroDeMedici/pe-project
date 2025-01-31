@@ -67,11 +67,14 @@ simtime_t VMs::addTask(Task* task, simtime_t currentTime)
                 newTask.remainingInstructions = taskLength - accumulator;
                 // Insert the task
                 runningTasks.insert(it, newTask);
+                
+                // Update accumulator (for the insertion check)
+                accumulator += it->remainingInstructions;
+
                 // Decrement the remaining instructions of the next task
                 it->remainingInstructions -= newTask.remainingInstructions;
 
                 // Exit from the loop
-                accumulator += it->remainingInstructions;
                 break;
             }
             // Update accumulator
