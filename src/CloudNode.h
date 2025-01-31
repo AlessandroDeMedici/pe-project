@@ -16,36 +16,52 @@ using namespace omnetpp;
 
 namespace cloudcomputingworkloads {
 
+// CloudNode module that is made of N VMs that elaborate tasks in parallel
+// Has a FIFO queue and can run in either segregation or fair sharing mode
+// after elaboration forwards tasks to BackendServer with probability p or to Sink with probability 1-p
 class CloudNode : public cSimpleModule
 #ifdef DEBUG_COHERENCE
 , public CoherenceCheck 
 #endif
 {
-  private:
-    int numVMs;
-    double processingRate;
-    bool fairSharing;
-    double p;
+    private:
+        // Number of VMs inside the CloudNode N
+        int numVMs;
+        // Processing rate R (instructions per second)
+        double processingRate;
+        // If true use fair sharing mode, else segregation mode
+        bool fairSharing;
+        // Probability of forwarding to the BackendServer for extra elaboration
+        double p;
 
-    std::queue<Task *> fifoQueue;
-    VMs vm;
-    cMessage *nextEvent;
+        // Fifo queue for incoming tasks
+        std::queue<Task *> fifoQueue;
+        // VMs class that keeps track of what VMs are active, their rate and the remaining instruction to end the elaboration
+        VMs vm;
+        // Support message used internally to handle elaboration end events
+        cMessage *nextEvent;
 
-    simtime_t lastDepartureTime;
+        // Time of last departure (used to compute interdeparture time)
+        simtime_t lastDepartureTime;
 
-    simsignal_t Nq;
-    simsignal_t W;
-    simsignal_t R;
-    simsignal_t activeVMs;
-    simsignal_t interDepartureTime;
+        // Signals used to keep track of statistics
+        simsignal_t Nq; // Number of elements in the queue
+        simsignal_t W; // Task waiting time
+        simsignal_t R; // Task response time
+        simsignal_t activeVMs; // Number of active VMs
+        simsignal_t interDepartureTime; // Interdeparture time
 
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void forwardFinishedTask(Task *task);
-    virtual void finish();
+    protected:
+        // Module initialization
+        virtual void initialize();
+        // Message handler (both internal and external)
+        virtual void handleMessage(cMessage *msg);
+        // Function to forward finished tasks to either Sink or BackendServer based on probability p
+        virtual void forwardFinishedTask(Task *task);
+        // Simulation end handler
+        virtual void finish();
 };
 
-};
+}; // Namespace
 
 #endif

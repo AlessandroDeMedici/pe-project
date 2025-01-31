@@ -14,37 +14,57 @@ using namespace omnetpp;
 
 namespace cloudcomputingworkloads {
 
+
+// Module that generates the tasks and sends them to CloudNode
 class TaskGenerator : public cSimpleModule
 #ifdef DEBUG_COHERENCE
 , public CoherenceCheck 
 #endif
 {
-  int timeDistributionType;
-  double timeDistributionMean;
+    // Mean time T between two consecutive arrivals in the network
+    double timeDistributionMean;
+    // Distribuition type of the time between two consecutive arrivals in the network
+    // 0 = constant at value T
+    // 1 = exponential with mean T
+    // 2 = unifrom from 0 to 2T
+    int timeDistributionType;
+    
+    // Mean number I of instruction needed to process the packet in the CloudNode
+    double instrDistributionMean;
+    // Distribuition type of the number of instruction needed to process the packet in the CloudNode
+    // 0 = constant at value I
+    // 1 = exponential with mean I
+    // 2 = unifrom from 0 to 2I
+    int instrDistributionType;
 
-  int instrDistributionType;
-  double instrDistributionMean;
+    // Timer task used to schedule events for the next packet to send out
+    Task *timer_;
 
-  Task *timer_;
-
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *timer);
-    virtual void scheduleNext();
+    protected:
+        // Module initialization
+        virtual void initialize();
+        // Timer end handler
+        virtual void handleMessage(cMessage *timer);
+        // Next timer event scheduler
+        virtual void scheduleNext();
 };
 
+// Sink module that collects completed tasks that exit the network and computes statistics
 class Sink : public cSimpleModule
 #ifdef DEBUG_COHERENCE
 , public CoherenceCheck 
 #endif
 {
-  private:
-    simsignal_t taskTime;
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    private:
+        // Signal for task response time statistic
+        simsignal_t taskTime;
+    protected:
+        // Module initialization
+        virtual void initialize();
+        // Incoming message handler
+        virtual void handleMessage(cMessage *msg);
 };
 
-};
+}; // Namespace
 
 #endif
