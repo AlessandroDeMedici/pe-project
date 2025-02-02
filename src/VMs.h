@@ -1,6 +1,8 @@
 #ifndef __CLOUDCOMPUTINGWORKLOADS_VMS_H
 #define __CLOUDCOMPUTINGWORKLOADS_VMS_H
 
+#include "debugOptions.h"
+
 #include <list>
 #include <omnetpp.h>
 #include "Task_m.h"

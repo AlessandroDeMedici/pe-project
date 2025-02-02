@@ -6,3 +6,8 @@ src/Makefile.*
 src/*.exe
 src/Task_m.*
 src/CloudComputingWorkloads*
+
+jupyter/*.pdf
+jupyter/*.json
+simulations/frames/*
+report/*
